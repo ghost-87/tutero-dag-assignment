@@ -218,7 +218,49 @@ func (g Graph) Parents(of Node) []Node {
 // every edge u -> v, u comes before v in the ordering.
 func (g Graph) TopologicalSort() ([]Node, error) {
 	//* You may wish to implement this!
-	panic("not implemented")
+	// panic("not implemented")
+
+
+	nodeValList := []Node{}
+	nodeLenMakeMapVal := make(map[Node]int)
+
+	if len(g.adjacenyList) == 0 {
+		return nil, fmt.Errorf("Adjacency List Graph Val is returned null/empty ")
+	}
+
+	for node := range g.adjacenyList {
+		nodeLenMakeMapVal[node] = 0
+	}
+
+	for _, consecutiveNodes := range g.adjacenyList {
+		for _, forEachConsecutiveNodes := range consecutiveNodes {
+			nodeLenMakeMapVal[forEachConsecutiveNodes]++
+		}
+	}
+
+	checkParentValWhileIteration := []Node{}
+	for node, parentNodeCount := range nodeLenMakeMapVal {
+		if parentNodeCount == 0 {
+			checkParentValWhileIteration = append(checkParentValWhileIteration, node)
+		}
+	}
+
+	for len(checkParentValWhileIteration) > 0 {
+		currentNode := checkParentValWhileIteration[0]
+		checkParentValWhileIteration = checkParentValWhileIteration[1:]
+
+		nodeValList = append(nodeValList, currentNode)
+
+		for _, consecutiveNodeVal := range g.adjacenyList[currentNode] {
+			nodeLenMakeMapVal[consecutiveNodeVal]--
+
+			if nodeLenMakeMapVal[consecutiveNodeVal] == 0 {
+				checkParentValWhileIteration = append(checkParentValWhileIteration, consecutiveNodeVal)
+			}
+		}
+	}
+
+	return nodeValList, nil
 }
 
 //* You may implement more methods for Graph!

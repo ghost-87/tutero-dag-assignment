@@ -14,9 +14,20 @@ func New() *stepper {
 
 type stepper struct {
 	//* You may add fields to this struct.
+	finalStepperVal int
 }
 
 func (s *stepper) Step(graph graph.Graph) (graph.Node, error) {
 	//* Implement the Step function.
-	return graph.Nodes()[len(graph.Nodes())-1], nil // nieve solution -- returns a random node.
+	// return graph.Nodes()[len(graph.Nodes())-1], nil // nieve solution -- returns a random node.
+
+	sortedGraphNodeList, err := graph.TopologicalSort()
+	if err != nil {
+		return "", err
+	}
+
+	s.finalStepperVal += 1
+
+	mid := len(sortedGraphNodeList) / 2
+	return sortedGraphNodeList[mid], nil
 }
